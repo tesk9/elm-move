@@ -34,6 +34,9 @@ function moveProject() {
         fs.writeFile(path.join(destination, elmFileName), fileContents, function(err) {
           if (err) { throw err; }
           console.log(path.join(projectPath, elmFileName), "contents copied to", path.join(destination, elmFileName));
+          fs.unlink(path.join(projectPath, elmFileName), function(err) {
+            if (err) { console.log("ERR", err); }
+          });
         });
       });
     });
