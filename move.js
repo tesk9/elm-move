@@ -28,16 +28,20 @@ function moveProject() {
       return /.elm$/.test(file)
     });
 
-    elmFileNames.forEach(function(elmFileName) {
-      fs.readFile(path.join(projectPath, elmFileName), function(err, fileContents) {
-        if (err) { throw err; }
-        fs.writeFile(path.join(destination, elmFileName), fileContents, function(err) {
-          if (err) { throw err; }
-          console.log(path.join(projectPath, elmFileName), "contents copied to", path.join(destination, elmFileName));
-          fs.unlink(path.join(projectPath, elmFileName), function(err) {
-            if (err) { console.log("ERR", err); }
-          });
-        });
+    elmFileNames.forEach(moveElmFile);
+  });
+}
+
+function moveElmFile(elmFileName) {
+  var originalFilePath = path.join(projectPath, elmFileName);
+  var newFilePath = path.join(destination, elmFileName);
+  fs.readFile(originalFilePath, function(err, fileContents) {
+    if (err) { throw err; }
+    fs.writeFile(newFilePath, fileContents, function(err) {
+      if (err) { throw err; }
+      console.log(originalFilePath, "contents copied to", newFilePath);
+      fs.unlink(originalFilePath, function(err) {
+        if (err) { console.log("ERR", err); }
       });
     });
   });
