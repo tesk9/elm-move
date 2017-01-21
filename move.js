@@ -9,7 +9,7 @@ var destination = process.argv[3];
 function validatePaths(paths) {
   paths.forEach(function(path) {
     if (!fs.existsSync(path)) {
-      throw path + "does not exist.";
+      throw path + " does not exist.";
     }
   });
 }
