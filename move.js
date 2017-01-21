@@ -14,21 +14,20 @@ function validatePaths(paths) {
   });
 }
 
+var isAFolder = function(name) {
+  return !(/\./.test(name));
+}
+
+var isAnElmFile = function(name) {
+  return /\.elm$/.test(name);
+}
+
 function moveProject(original, destination) {
   validatePaths([original, destination]);
 
   fs.readdir(original, function(err, files) {
-    var folders = files.filter(function(file) {
-      return !(/\./.test(file));
-    });
-
-    var elmFileNames = files.filter(function(file) {
-      return /\.elm$/.test(file);
-    });
-
-    if (!files.length) {
-      console.log("No Elm files found.");
-    }
+    var folders = files.filter(isAFolder);
+    var elmFileNames = files.filter(isAnElmFile);
 
     folders.forEach(moveFolder(original, destination));
     elmFileNames.forEach(moveElmFile(original, destination));
@@ -81,7 +80,6 @@ function moveElmFile(projectPath, destination) {
       return file.replace(oldModuleName, newModuleName)
     }, fileContents);
   };
-
 
   return function(elmFileName, _index, elmFileNames) {
     var originalFilePath = path.join(projectPath, elmFileName);
