@@ -1,6 +1,6 @@
 {
   "name": "elm-move",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Command line tool for easily moving Elm projects.",
   "main": "move.js",
   "scripts": {
@@ -17,6 +17,9 @@
   "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/tesk9/elm-move/issues"
+  },
+  "bin": {
+    "elm-move": "move.js"
   },
   "homepage": "https://github.com/tesk9/elm-move#readme"
 }
