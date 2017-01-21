@@ -63,7 +63,7 @@ function replaceModuleNames(fileContents, elmFileNames) {
 
 
 function getModuleName(project, elmFileName) {
-  var re = /([A-Z]{1}[a-z]*\/)*[A-Z]{1}[a-z]*/g;
+  var re = /([A-Z]{1}[A-Za-z]*\/)*[A-Z]{1}[A-Za-z]*/g;
   return path.join(project, elmFileName).match(re)[0].replace(/\//g, ".");
 }
 
