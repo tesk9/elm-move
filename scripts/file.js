@@ -5,23 +5,13 @@ function moveElmFile(projectPath, destination) {
   var createNewElmFile = function(originalFilePath, newFilePath, elmFileNames) {
     return function(err, fileContents) {
       if (err) { throw err; }
-      var newFileContents = replaceModuleNames(fileContents, elmFileNames);
+      var newFileContents = elmFileNames.reduce(replaceModules(projectPath, destination), fileContents);;
       fs.writeFile(newFilePath, newFileContents, function(err) {
         if (err) { throw err; }
         logMove(originalFilePath, newFilePath);
-        removeFile(originalFilePath)
+        removeFile(originalFilePath);
       });
     }
-  };
-
-  var replaceModuleNames = function(fileContents, elmFileNames) {
-    return elmFileNames.reduce(function(file, elmFileName) {
-      var oldModuleName = getModuleName(projectPath, elmFileName);
-      var newModuleName = getModuleName(destination, elmFileName);
-
-      var re = new RegExp(oldModuleName)
-      return file.replace(oldModuleName, newModuleName)
-    }, fileContents);
   };
 
   return function(elmFileName, _index, elmFileNames) {
@@ -32,9 +22,47 @@ function moveElmFile(projectPath, destination) {
   }
 }
 
+function moveElmPackageFile(projectPath, destination) {
+  var replacer = function(value) {
+    return replaceModules(projectPath, destination)(value, "");
+  };
+
+  return function(fileName) {
+    var originalFilePath = path.join(projectPath, fileName);
+    var newFilePath = path.join(destination, fileName);
+
+    fs.readFile(originalFilePath, 'utf8', function(err, fileContents) {
+      if (err) { throw err; }
+      var json =  JSON.parse(fileContents);
+
+      json["source-directories"] = json["source-directories"].map(replacer);
+      json["exposed-modules"] = json["exposed-modules"].map(replacer);
+
+      var newFileContents = JSON.stringify(json);
+      fs.writeFile(newFilePath, newFileContents, function(err) {
+        if (err) { throw err; }
+        logMove(originalFilePath, newFilePath);
+        removeFile(originalFilePath);
+      });
+    });
+  };
+};
+
+
+function replaceModules(projectPath, destination) {
+  return function (file, elmFileName) {
+    var oldModuleName = getModuleName(projectPath, elmFileName);
+    var newModuleName = getModuleName(destination, elmFileName);
+    return file.replace(oldModuleName, newModuleName);
+  };
+}
+
 function getModuleName(project, elmFileName) {
   var re = /([A-Z]{1}[A-Za-z]*\/)*[A-Z]{1}[A-Za-z]*/g;
-  return path.join(project, elmFileName).match(re)[0].replace(/\//g, ".");
+  var match = path.join(project, elmFileName).match(re);
+  if (match) {
+    return match[0].replace(/\//g, ".");
+  }
 };
 
 function logMove(originalFilePath, newFilePath) {
@@ -43,9 +71,12 @@ function logMove(originalFilePath, newFilePath) {
 }
 
 function removeFile(path) {
-  fs.unlink(path, function(err) {
-    if (err) { console.log("ERR", err); }
-  });
+  // fs.unlink(path, function(err) {
+  //   if (err) { console.log("ERR", err); }
+  // });
 }
 
-module.exports = moveElmFile
+module.exports = {
+  moveElmFile: moveElmFile,
+  moveElmPackageFile: moveElmPackageFile,
+}
