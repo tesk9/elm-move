@@ -71,9 +71,9 @@ function logMove(originalFilePath, newFilePath) {
 }
 
 function removeFile(path) {
-  // fs.unlink(path, function(err) {
-  //   if (err) { console.log("ERR", err); }
-  // });
+  fs.unlink(path, function(err) {
+    if (err) { console.log("ERR", err); }
+  });
 }
 
 module.exports = {
