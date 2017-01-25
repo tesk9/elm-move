@@ -21,5 +21,6 @@
   "bin": {
     "elm-move": "move.js"
   },
-  "homepage": "https://github.com/tesk9/elm-move#readme"
+  "homepage": "https://github.com/tesk9/elm-move#readme",
+  "preferGlobal": true
 }
