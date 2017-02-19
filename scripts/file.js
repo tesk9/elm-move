@@ -52,8 +52,9 @@ function moveElmPackageFile(projectPath, destination) {
 function replaceModules(projectPath, destination) {
   return function (file, elmFileName) {
     var oldModuleName = getModuleName(projectPath, elmFileName);
+    var alternativeModuleName = getModuleName(" ", elmFileName);
     var newModuleName = getModuleName(destination, elmFileName);
-    return file.replace(oldModuleName, newModuleName);
+    return file.replace(alternativeModuleName, newModuleName).replace(oldModuleName, newModuleName);
   };
 }
 
