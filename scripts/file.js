@@ -1,15 +1,16 @@
 var path = require("path");
 var fs = require("fs");
+var helpers = require("./scripts/helpers.js");
 
 function moveElmFile(projectPath, destination) {
   var createNewElmFile = function(originalFilePath, newFilePath, elmFileNames) {
     return function(err, fileContents) {
       if (err) { throw err; }
-      var newFileContents = elmFileNames.reduce(replaceModules(projectPath, destination), fileContents);;
+      var newFileContents = elmFileNames.reduce(helpers.replaceModules(projectPath, destination), fileContents);;
       fs.writeFile(newFilePath, newFileContents, function(err) {
         if (err) { throw err; }
-        logMove(originalFilePath, newFilePath);
-        removeFile(originalFilePath);
+        helpers.logMove(originalFilePath, newFilePath);
+        helpers.removeFile(originalFilePath);
       });
     }
   };
@@ -24,7 +25,7 @@ function moveElmFile(projectPath, destination) {
 
 function moveElmPackageFile(projectPath, destination) {
   var replacer = function(value) {
-    return replaceModules(projectPath, destination)(value, "");
+    return helpers.replaceModules(projectPath, destination)(value, "");
   };
 
   return function(fileName) {
@@ -41,41 +42,12 @@ function moveElmPackageFile(projectPath, destination) {
       var newFileContents = JSON.stringify(json);
       fs.writeFile(newFilePath, newFileContents, function(err) {
         if (err) { throw err; }
-        logMove(originalFilePath, newFilePath);
-        removeFile(originalFilePath);
+        helpers.logMove(originalFilePath, newFilePath);
+        helpers.removeFile(originalFilePath);
       });
     });
   };
 };
-
-
-function replaceModules(projectPath, destination) {
-  return function (file, elmFileName) {
-    var oldModuleName = getModuleName(projectPath, elmFileName);
-    var alternativeModuleName = getModuleName(" ", elmFileName);
-    var newModuleName = getModuleName(destination, elmFileName);
-    return file.replace(alternativeModuleName, newModuleName).replace(oldModuleName, newModuleName);
-  };
-}
-
-function getModuleName(project, elmFileName) {
-  var re = /([A-Z]{1}[A-Za-z]*\/)*[A-Z]{1}[A-Za-z]*/g;
-  var match = path.join(project, elmFileName).match(re);
-  if (match) {
-    return match[0].replace(/\//g, ".");
-  }
-};
-
-function logMove(originalFilePath, newFilePath) {
-  console.log("\nContents Moved:");
-  console.log(originalFilePath, "=>", newFilePath);
-}
-
-function removeFile(path) {
-  fs.unlink(path, function(err) {
-    if (err) { console.log("ERR", err); }
-  });
-}
 
 module.exports = {
   moveElmFile: moveElmFile,
