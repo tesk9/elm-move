@@ -1,6 +1,6 @@
 var path = require("path");
 var fs = require("fs");
-var helpers = require("./scripts/helpers.js");
+var helpers = require("./helpers.js");
 
 function moveElmFile(projectPath, destination) {
   var createNewElmFile = function(originalFilePath, newFilePath, elmFileNames) {
