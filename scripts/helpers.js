@@ -1,4 +1,5 @@
 var path = require("path");
+var fs = require("fs");
 
 function replaceModules(projectPath, destination) {
   return function (file, elmFileName) {
