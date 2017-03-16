@@ -22,6 +22,12 @@ describe('Helpers', function() {
         helpers.getModuleName('some_directory/BigProject/FeatureName/', 'Model')
       );
     });
+
+    it('should return Users.FeatureName.Model for /Users/some_directory/BigProject/FeatureName/Model', function() {
+      assert.equal('BigProject.FeatureName.Model',
+        helpers.getModuleName('/Users/some_directory/BigProject/FeatureName/', 'Model')
+      );
+    });
   });
 
   describe('#replaceModules(projectPath, destination)(file, elmFileName)', function() {

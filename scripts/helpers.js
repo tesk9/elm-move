@@ -5,12 +5,13 @@ function replaceModules(projectPath, destination) {
   return function (file, elmFileName) {
     var oldModuleName = getModuleName(projectPath, elmFileName);
     var newModuleName = getModuleName(destination, elmFileName);
+    console.log("Replacing old module name", oldModuleName, " with ", newModuleName);
     return file.replace(oldModuleName, newModuleName)
   };
 }
 
 function getModuleName(project, elmFileName) {
-  var re = /([A-Z]{1}[A-Za-z]*\/)*[A-Z]{1}[A-Za-z]*/g;
+  var re = /([A-Z]{1}[A-Za-z]*\/)*[A-Z]{1}[A-Za-z]*$/g;
   var match = path.join(project, elmFileName).match(re);
   if (match) {
     return match[0].replace(/\//g, ".");
