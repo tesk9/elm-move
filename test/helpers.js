@@ -4,28 +4,28 @@ var helpers = require('./../scripts/helpers.js')
 describe('Helpers', function() {
   describe('#getModuleName(project, elmFileName)', function() {
     it('should return Model for Model', function() {
-      assert.equal('Model', helpers.getModuleName('/', 'Model'));
+      assert.equal('Model', helpers.getModuleName('/', 'Model.elm'));
     });
 
     it('should return Model for some_directory/Model', function() {
-      assert.equal('Model', helpers.getModuleName('some_directory/', 'Model'));
+      assert.equal('Model', helpers.getModuleName('some_directory/', 'Model.elm'));
     });
 
     it('should return FeatureName.Model for some_directory/FeatureName/Model', function() {
       assert.equal('FeatureName.Model',
-        helpers.getModuleName('some_directory/FeatureName/', 'Model')
+        helpers.getModuleName('some_directory/FeatureName/', 'Model.elm')
       );
     });
 
     it('should return BigProject.FeatureName.Model for some_directory/BigProject/FeatureName/Model', function() {
       assert.equal('BigProject.FeatureName.Model',
-        helpers.getModuleName('some_directory/BigProject/FeatureName/', 'Model')
+        helpers.getModuleName('some_directory/BigProject/FeatureName/', 'Model.elm')
       );
     });
 
     it('should return Users.FeatureName.Model for /Users/some_directory/BigProject/FeatureName/Model', function() {
       assert.equal('BigProject.FeatureName.Model',
-        helpers.getModuleName('/Users/some_directory/BigProject/FeatureName/', 'Model')
+        helpers.getModuleName('/Users/some_directory/BigProject/FeatureName/', 'Model.elm')
       );
     });
   });

@@ -5,17 +5,22 @@ function replaceModules(projectPath, destination) {
   return function (file, elmFileName) {
     var oldModuleName = getModuleName(projectPath, elmFileName);
     var newModuleName = getModuleName(destination, elmFileName);
-    console.log("Replacing old module name", oldModuleName, " with ", newModuleName);
     return file.replace(oldModuleName, newModuleName)
   };
 }
 
 function getModuleName(project, elmFileName) {
-  var re = /([A-Z]{1}[A-Za-z]*\/)*[A-Z]{1}[A-Za-z]*$/g;
-  var match = path.join(project, elmFileName).match(re);
-  if (match) {
-    return match[0].replace(/\//g, ".");
-  }
+  var fileNameWithoutExtension = path.basename(elmFileName, ".elm");
+  var pathComponents = project.split(path.sep).filter(function(v) { return v != "" });
+
+  moduleComponents = pathComponents.reduce(function(array, value) {
+    if(/^[A-Z]/.test(value)) { array.push(value); }
+    else { array = []; }
+    return array;
+  }, []);
+
+  moduleComponents.push(fileNameWithoutExtension);
+  return moduleComponents.join(".");
 };
 
 function logMove(originalFilePath, newFilePath) {
