@@ -40,4 +40,12 @@ describe('Move', function() {
     var move = function() { moveProject('A/Folder', 'Anywhere/ForReal/Tho') };
     assert.doesNotThrow(move);
   });
+
+  it('shold move a single file', function() {
+    moveProject('ASingleFile.elm', 'ASingleAwesomeFile.elm');
+    fs.readFile('./ASingleAwesomeFile.elm', 'utf8', function(err, content) {
+      if(err) { throw err; }
+      return assert(content == 'module ASingleAwesomeFile exposing (Model, Thing, otherThing)');
+    });
+  });
 });
