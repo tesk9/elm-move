@@ -3,6 +3,7 @@ var fs = require("fs");
 var path = require("path");
 
 var moveElmFile = fileMovers.moveElmFile;
+var moveElmFiles = fileMovers.moveElmFiles;
 var moveElmPackageFile = fileMovers.moveElmPackageFile;
 
 function moveProject(original, destination) {
@@ -10,6 +11,7 @@ function moveProject(original, destination) {
   console.log("Preparing:", original, "=>", destination)
 
   if (isAnElmFile(original) && isAnElmFile(destination)) {
+    console.log("both are elm files")
     moveElmFile(original, destination);
   } else {
     createFolderDestination(destination);
@@ -25,7 +27,7 @@ function moveFolderContents(original, destination) {
     var elmPackageJsons = files.filter(isAnElmPackageFile);
 
     folders.forEach(moveFolder(original, destination));
-    elmFileNames.forEach(moveElmFile(original, destination));
+    elmFileNames.forEach(moveElmFiles(original, destination));
     elmPackageJsons.forEach(moveElmPackageFile(original, destination));
   });
 }

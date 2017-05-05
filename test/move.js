@@ -43,9 +43,19 @@ describe('Move', function() {
 
   it('shold move a single file', function() {
     moveProject('ASingleFile.elm', 'ASingleAwesomeFile.elm');
-    fs.readFile('./ASingleAwesomeFile.elm', 'utf8', function(err, content) {
+    var result = fs.readFileSync('ASingleAwesomeFile.elm', 'utf8', function(err, content) {
       if(err) { throw err; }
-      return assert(content == 'module ASingleAwesomeFile exposing (Model, Thing, otherThing)');
+      return content == 'module ASingleAwesomeFile exposing (Model, Thing, otherThing)';
     });
+    assert(result);
+  });
+
+  it('shold move a single nested file', function() {
+    moveProject('An/Existing/Elm/Project/Main.elm', 'ASingleAwesomeFile.elm');
+    var result = fs.readFileSync('ASingleAwesomeFile.elm', 'utf8', function(err, content) {
+      if(err) { throw err; }
+      return content == 'module ASingleAwesomeFile exposing (Model, Thing, otherThing)';
+    });
+    assert(result);
   });
 });
