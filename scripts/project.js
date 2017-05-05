@@ -6,16 +6,20 @@ var moveElmFile = fileMovers.moveElmFile;
 var moveElmPackageFile = fileMovers.moveElmPackageFile;
 
 function moveProject(original, destination) {
+  if (!fs.existsSync(original)) { throw original + " does not exist."; }
   console.log("Preparing:", original, "=>", destination)
 
   if (isAnElmFile(original) && isAnElmFile(destination)) {
-    return moveElmFile(original, destination);
+    moveElmFile(original, destination);
+  } else {
+    createFolderDestination(destination);
+    moveFolderContents(original, destination);
   }
+}
 
-  if (!fs.existsSync(original)) { throw original + " does not exist."; }
-  createDestination(destination);
-
+function moveFolderContents(original, destination) {
   fs.readdir(original, function(err, files) {
+    if (err) { throw err; }
     var folders = files.filter(isAFolder);
     var elmFileNames = files.filter(isAnElmFile);
     var elmPackageJsons = files.filter(isAnElmPackageFile);
@@ -50,7 +54,7 @@ function moveFolder(projectPath, destination) {
   }
 }
 
-function createDestination(destination) {
+function createFolderDestination(destination) {
   if (!fs.existsSync(destination)) {
     fs.mkdir(destination, function(err) {
       if (err) { throw err; }
