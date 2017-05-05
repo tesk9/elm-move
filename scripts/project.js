@@ -7,7 +7,12 @@ var moveElmPackageFile = fileMovers.moveElmPackageFile;
 
 function moveProject(original, destination) {
   console.log("Preparing:", original, "=>", destination)
-  if (!fs.existsSync(original)) {throw original + " does not exist."; }
+
+  if (isAnElmFile(original) && isAnElmFile(destination)) {
+    return moveElmFile(original, destination);
+  }
+
+  if (!fs.existsSync(original)) { throw original + " does not exist."; }
   createDestination(destination);
 
   fs.readdir(original, function(err, files) {
