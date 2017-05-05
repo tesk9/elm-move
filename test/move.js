@@ -35,4 +35,9 @@ describe('Move', function() {
     var move = function() { moveProject('A/Folder', 'Anywhere') };
     assert.doesNotThrow(move);
   });
+
+  it('should create a directory when given a nested nonexistent destination', function() {
+    var move = function() { moveProject('A/Folder', 'Anywhere/ForReal/Tho') };
+    assert.doesNotThrow(move);
+  });
 });
