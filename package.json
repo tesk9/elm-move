@@ -24,6 +24,7 @@
   "homepage": "https://github.com/tesk9/elm-move#readme",
   "preferGlobal": true,
   "devDependencies": {
-    "mocha": "^3.2.0"
+    "mocha": "^3.2.0",
+    "mock-fs": "^4.3.0"
   }
 }
